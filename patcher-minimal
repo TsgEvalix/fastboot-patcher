@@ -1,10 +1,10 @@
 #!/bin/bash
 #####=============== SMALLRAT TOOLBOX ===============#####
 function existance() {
-   if [ -e $1 ];
-   then found=true && eval $2
-   else found=false && eval $3
-   fi
+    if [ -e $1 ];
+    then found=true && eval $2
+    else found=false && eval $3
+    fi
 }
 csd=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 pass=":"
@@ -13,13 +13,13 @@ pass=":"
 # exit or rename if necessary
 existance $csd/PnZH.img.lz4 $pass $pass
 if [ $found == true ]; then
-   echo "found lz4-zipped image! please unzip it yourself, and re-run this script! " && exit
+    echo "found lz4-zipped image! please unzip it yourself, and re-run this script! " && exit
 else existance $csd/PnZH.img $pass $pass
-   if [ $found == true ]; then
-      mv $csd/PnZH.img $csd/raw.img &&
-      echo "found unzipped image!"
-      else echo "no image to patch found. please place PnZH.img in folder!" && exit 1
-   fi
+    if [ $found == true ]; then
+        mv $csd/PnZH.img $csd/raw.img &&
+        echo "found unzipped image!"
+        else echo "no image to patch found. please place PnZH.img in folder!" && exit 1
+    fi
 fi
 
 # edit raw image
