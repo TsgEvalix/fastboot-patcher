@@ -84,22 +84,25 @@ echo "successfully finished patch to fragmented image!"
 # reassemble fragmented image
 mkdir $csd/output
 echo "attempting to defragment image! if your image is corrupted, this may not end well..."
-$csd/magiskboot repack $csd/header.img $csd/output/PnZH_patched.img
-existance $csd/output/PnZH_patched.img "echo assembled PnZH_patched.img! && cd $csd" "echo output.img not found, exiting && exit 1"
+# Reassemble as the standard recovery.img name
+$csd/magiskboot repack $csd/header.img $csd/output/recovery.img
+existance $csd/output/recovery.img "echo assembled recovery.img! && cd $csd" "echo output.img not found, exiting && exit 1"
 
 # sign patched image with keyfile
 echo "extracting public key to phh.pub.bin..."
 python3 $csd/avbtool extract_public_key --key $csd/keys/phh.pem --output $csd/keys/phh.pub.bin &&
 echo "signing patched image with key..."
-python3 $csd/avbtool add_hash_footer --image $csd/output/PnZH_patched.img --partition_name recovery --partition_size $(wc -c $csd/raw.img | cut -f 1 -d ' ') --key $csd/keys/phh.pem --algorithm SHA256_RSA4096
+# Signing the standard recovery.img name
+python3 $csd/avbtool add_hash_footer --image $csd/output/recovery.img --partition_name recovery --partition_size $(wc -c $csd/raw.img | cut -f 1 -d ' ') --key $csd/keys/phh.pem --algorithm SHA256_RSA4096
 echo "signed image successfully!"
 
 # package image for use in odin
 echo "packaging image for odin..."
-tar -cvf $csd/output/PnZH_patched.tar $csd/output/PnZH_patched.img &&
-md5sum -t $csd/output/PnZH_patched.tar >> $csd/output/PnZH_patched.tar &&
-mv $csd/output/PnZH_patched.tar $csd/output/PnZH_patched.tar.md5 &&
-echo "successfully packaged PnZH_patched.img -> PnZH_patched.tar.md5"
+# Packaging the standard recovery.img name
+tar -cvf $csd/output/recovery.tar $csd/output/recovery.img &&
+md5sum -t $csd/output/recovery.tar >> $csd/output/recovery.tar &&
+mv $csd/output/recovery.tar $csd/output/recovery.tar.md5 &&
+echo "successfully packaged recovery.img -> recovery.tar.md5"
 
 # hehe
 echo "enjoy! hope what you're trying to do works."
